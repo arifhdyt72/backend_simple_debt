@@ -282,8 +282,9 @@ func (h *hutangHandler) ExportHutang(c *gin.Context) {
 
 	filename := fmt.Sprintf("rekapitulasi-hutang-%d.xlsx", time.Now().Unix())
 	path := fmt.Sprintf("report/%s", filename)
+	savePath := fmt.Sprintf("./report/%s", filename)
 
-	err = xlsx.SaveAs(path)
+	err = xlsx.SaveAs(savePath)
 	if err != nil {
 		errorMessage := gin.H{"errors": err.Error()}
 		response := helper.ApiResponse("Failed to Export Report", http.StatusBadRequest, "error", errorMessage)
@@ -291,7 +292,7 @@ func (h *hutangHandler) ExportHutang(c *gin.Context) {
 		return
 	}
 
-	fileUploaded, err := os.Open(path)
+	fileUploaded, err := os.Open(savePath)
 	if err != nil {
 		errorMessage := gin.H{"errors": err.Error()}
 		response := helper.ApiResponse("export report failed", http.StatusUnprocessableEntity, "error", errorMessage)
