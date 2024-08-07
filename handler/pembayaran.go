@@ -6,6 +6,7 @@ import (
 	"backend_test_debt/pembayaran"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -54,10 +55,29 @@ func (h *pembayaranHandler) CreatePembayaran(c *gin.Context) {
 
 	titleText := strings.ReplaceAll(strings.ToLower(file.Filename), " ", "-")
 	path := fmt.Sprintf("images/%d-%s", time.Now().Unix(), titleText)
+	// Create the file with the desired permissions
+	out, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0755)
+	if err != nil {
+		data := gin.H{"errors": err.Error()}
+		response := helper.ApiResponse("Failed to create file", http.StatusUnprocessableEntity, "error", data)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+	defer out.Close()
+
 	err = c.SaveUploadedFile(file, path)
 	if err != nil {
 		data := gin.H{"errors": err.Error()}
 		response := helper.ApiResponse("Failed to upload file", http.StatusUnprocessableEntity, "error", data)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	// Set file permissions to 0644
+	err = os.Chmod(path, 0755)
+	if err != nil {
+		data := gin.H{"errors": err.Error()}
+		response := helper.ApiResponse("Failed to set file permissions", http.StatusUnprocessableEntity, "error", data)
 		c.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
