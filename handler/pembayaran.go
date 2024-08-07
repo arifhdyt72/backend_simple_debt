@@ -56,7 +56,7 @@ func (h *pembayaranHandler) CreatePembayaran(c *gin.Context) {
 	titleText := strings.ReplaceAll(strings.ToLower(file.Filename), " ", "-")
 	path := fmt.Sprintf("images/%d-%s", time.Now().Unix(), titleText)
 	// Create the file with the desired permissions
-	out, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE, 0777)
+	out, err := os.OpenFile("./"+path, os.O_WRONLY|os.O_CREATE, 0777)
 	if err != nil {
 		data := gin.H{"errors": err.Error()}
 		response := helper.ApiResponse("Failed to create file 2", http.StatusUnprocessableEntity, "error", data)
@@ -65,7 +65,7 @@ func (h *pembayaranHandler) CreatePembayaran(c *gin.Context) {
 	}
 	defer out.Close()
 
-	err = c.SaveUploadedFile(file, path)
+	err = c.SaveUploadedFile(file, "./"+path)
 	if err != nil {
 		data := gin.H{"errors": err.Error()}
 		response := helper.ApiResponse("Failed to upload file 3", http.StatusUnprocessableEntity, "error", data)
