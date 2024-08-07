@@ -47,7 +47,7 @@ func (h *pembayaranHandler) CreatePembayaran(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
 		data := gin.H{"errors": err.Error()}
-		response := helper.ApiResponse("Failed to upload file", http.StatusUnprocessableEntity, "error", data)
+		response := helper.ApiResponse("Failed to upload file 1", http.StatusUnprocessableEntity, "error", data)
 
 		c.JSON(http.StatusUnprocessableEntity, response)
 		return
@@ -59,7 +59,7 @@ func (h *pembayaranHandler) CreatePembayaran(c *gin.Context) {
 	out, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE, 0777)
 	if err != nil {
 		data := gin.H{"errors": err.Error()}
-		response := helper.ApiResponse("Failed to create file", http.StatusUnprocessableEntity, "error", data)
+		response := helper.ApiResponse("Failed to create file 2", http.StatusUnprocessableEntity, "error", data)
 		c.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
@@ -68,7 +68,7 @@ func (h *pembayaranHandler) CreatePembayaran(c *gin.Context) {
 	err = c.SaveUploadedFile(file, path)
 	if err != nil {
 		data := gin.H{"errors": err.Error()}
-		response := helper.ApiResponse("Failed to upload file", http.StatusUnprocessableEntity, "error", data)
+		response := helper.ApiResponse("Failed to upload file 3", http.StatusUnprocessableEntity, "error", data)
 		c.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
