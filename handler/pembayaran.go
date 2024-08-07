@@ -54,7 +54,7 @@ func (h *pembayaranHandler) CreatePembayaran(c *gin.Context) {
 
 	titleText := strings.ReplaceAll(strings.ToLower(file.Filename), " ", "-")
 	path := fmt.Sprintf("images/%d-%s", time.Now().Unix(), titleText)
-	err = c.SaveUploadedFile(file, "./"+path)
+	err = c.SaveUploadedFile(file, path)
 	if err != nil {
 		data := gin.H{"errors": err.Error()}
 		response := helper.ApiResponse("Failed to upload file", http.StatusUnprocessableEntity, "error", data)
